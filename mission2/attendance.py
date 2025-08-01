@@ -41,7 +41,7 @@ class Policy(ABC):
 
     def __init_subclass__(cls):
         super().__init_subclass__()
-        Policy.registry.append(cls)
+        Policy.registry.append(cls())
 
 
 class BonusWednesdayPolicy(Policy):
@@ -71,7 +71,7 @@ class Grader:
 class AttendanceSystem:
     def __init__(self):
         self.members: Dict[str, Member] = {}
-        self.policies = Policy.registry
+        self.policies: List[Policy] = Policy.registry
         self.grader = Grader()
 
     def ensure_member(self, name: str) -> Member:
@@ -107,7 +107,7 @@ class AttendanceSystem:
     def apply_policies(self):
         for member in self.members.values():
             for policy in self.policies:
-                policy().apply(member)
+                policy.apply(member)
 
     def finalize_grades(self):
         for member in self.members.values():
