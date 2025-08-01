@@ -4,16 +4,17 @@ DAY_POINTS = {
     "monday": 1, "tuesday": 1, "wednesday": 3,
     "thursday": 1, "friday": 1, "saturday": 2, "sunday": 2,
 }
+MEMBER_COUNT_LIMIT = 100
 
 name_to_member_id = {}
 member_count = 0
 
-attendance_by_day = [[0] * 100 for _ in range(100)]
-points = [0] * 100
-grade = [0] * 100
-names = [''] * 100
-wednesday_count = [0] * 100
-weekend_count = [0] * 100
+attendance_by_day = [[0] * MEMBER_COUNT_LIMIT for _ in range(MEMBER_COUNT_LIMIT)]
+points = [0] * MEMBER_COUNT_LIMIT
+grade = [0] * MEMBER_COUNT_LIMIT
+names = [''] * MEMBER_COUNT_LIMIT
+wednesday_count = [0] * MEMBER_COUNT_LIMIT
+weekend_count = [0] * MEMBER_COUNT_LIMIT
 
 
 def ensure_member(member_name):
