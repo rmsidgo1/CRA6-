@@ -1,58 +1,64 @@
-id1 = {}
-id_cnt = 0
+name_to_member_id = {}
+member_count = 0
 
 # dat[사용자ID][요일]
-dat = [[0] * 100 for _ in range(100)]
+attendance_by_day = [[0] * 100 for _ in range(100)]
 points = [0] * 100
 grade = [0] * 100
 names = [''] * 100
-wed = [0] * 100
-weeken = [0] * 100
+wednesday_attendance_count = [0] * 100
+weekend_attendance_count = [0] * 100
 
-def input2(w, wk):
-    global id_cnt
 
-    if w not in id1:
-        id_cnt += 1
-        id1[w] = id_cnt
-        names[id_cnt] = w
+def input2(name, weekday):
+    global member_count
 
-    id2 = id1[w]
+    if name not in name_to_member_id:
+        member_count += 1
+        name_to_member_id[name] = member_count
+        names[member_count] = name
 
+    member_id = name_to_member_id[name]
+
+    take_attendance(member_id, weekday)
+
+
+def take_attendance(member_id, weekday):
     add_point = 0
     index = 0
 
-    if wk == "monday":
+    if weekday == "monday":
         index = 0
         add_point += 1
-    elif wk == "tuesday":
+    elif weekday == "tuesday":
         index = 1
         add_point += 1
-    elif wk == "wednesday":
+    elif weekday == "wednesday":
         index = 2
         add_point += 3
-        wed[id2] += 1
-    elif wk == "thursday":
+        wednesday_attendance_count[member_id] += 1
+    elif weekday == "thursday":
         index = 3
         add_point += 1
-    elif wk == "friday":
+    elif weekday == "friday":
         index = 4
         add_point += 1
-    elif wk == "saturday":
+    elif weekday == "saturday":
         index = 5
         add_point += 2
-        weeken[id2] += 1
-    elif wk == "sunday":
+        weekend_attendance_count[member_id] += 1
+    elif weekday == "sunday":
         index = 6
         add_point += 2
-        weeken[id2] += 1
+        weekend_attendance_count[member_id] += 1
 
-    dat[id2][index] += 1
-    points[id2] += add_point
+    attendance_by_day[member_id][index] += 1
+    points[member_id] += add_point
 
-def input_file():
+
+def show_grade(attendance_file="attendance_weekday_500.txt"):
     try:
-        with open("attendance_weekday_500.txt", encoding='utf-8') as f:
+        with open(attendance_file, encoding='utf-8') as f:
             for _ in range(500):
                 line = f.readline()
                 if not line:
@@ -61,10 +67,10 @@ def input_file():
                 if len(parts) == 2:
                     input2(parts[0], parts[1])
 
-        for i in range(1, id_cnt + 1):
-            if dat[i][3] > 9:
+        for i in range(1, member_count + 1):
+            if attendance_by_day[i][3] > 9:
                 points[i] += 10
-            if dat[i][5] + dat[i][6] > 9:
+            if attendance_by_day[i][5] + attendance_by_day[i][6] > 9:
                 points[i] += 10
 
             if points[i] >= 50:
@@ -84,12 +90,13 @@ def input_file():
 
         print("\nRemoved player")
         print("==============")
-        for i in range(1, id_cnt + 1):
-            if grade[i] not in (1, 2) and wed[i] == 0 and weeken[i] == 0:
+        for i in range(1, member_count + 1):
+            if grade[i] not in (1, 2) and wednesday_attendance_count[i] == 0 and weekend_attendance_count[i] == 0:
                 print(names[i])
 
     except FileNotFoundError:
         print("파일을 찾을 수 없습니다.")
 
+
 if __name__ == "__main__":
-    input_file()
+    show_grade()
