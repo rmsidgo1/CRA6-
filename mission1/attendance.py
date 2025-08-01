@@ -102,7 +102,7 @@ def print_report() -> None:
             print(names[member_id])
 
 
-def show_result(attendance_file="attendance_weekday_500.txt"):
+def show_result(attendance_file):
     try:
         with open(attendance_file, 'r', encoding='utf-8') as lines:
             load_attendance(lines, limit=500)

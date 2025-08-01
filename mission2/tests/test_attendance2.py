@@ -7,23 +7,23 @@ import sys
 
 sys.path.append('C:\\PythonProject')
 
-from mission1.attendance import show_result
+from mission2.attendance import AttendanceSystem
 
 
 def act(attendance_file, sut):
     buf = io.StringIO()
     with redirect_stdout(buf):
-        sut(attendance_file)
+        sut.show_result(attendance_file)
         actual = buf.getvalue().rstrip()  # 맨 끝 "\n" 제거
     return actual
 
 
 def test_빈파일():
-    sut = show_result
-
-    attendance_file = "C:\\PythonProject\\mission1\\tests\\EmptyFile.txt"
+    sut = AttendanceSystem()
+    attendance_file = "C:\\PythonProject\\mission2\\tests\\EmptyFile.txt"
     with open(attendance_file, "w") as f:
         pass
+
     expected = "\nRemoved player\n=============="
 
     actual = act(attendance_file, sut)
@@ -33,7 +33,7 @@ def test_빈파일():
 
 
 def test_파일이없을때():
-    sut = show_result
+    sut = AttendanceSystem()
     attendance_file = "NotExistsFilename.txt"
     expected = "파일을 찾을 수 없습니다."
 
@@ -43,9 +43,9 @@ def test_파일이없을때():
 
 
 def test_기대한출력_나오는지():
-    sut = show_result
-    attendance_file = "C:\\PythonProject\\mission1\\tests\\input.txt"
-    with open("C:\\PythonProject\\mission1\\tests\\expected.txt", encoding='utf-8') as f:
+    sut = AttendanceSystem()
+    attendance_file = "C:\\PythonProject\\mission2\\tests\\input.txt"
+    with open("C:\\PythonProject\\mission2\\tests\\expected.txt", encoding='utf-8') as f:
         expected = f.read()
 
     actual = act(attendance_file, sut)
