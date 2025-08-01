@@ -496,5 +496,6 @@ Nina sunday
 Will tuesday
 Vera sunday
 Xena saturday
-Charlie monday
+Charlie monday tuesday
+Daisy thurrssdday
 Daisy thursday
