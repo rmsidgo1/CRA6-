@@ -16,12 +16,6 @@ wednesday_count = [0] * 100
 weekend_count = [0] * 100
 
 
-def take_attendance(name, weekday):
-    member_id = ensure_member(name)
-
-    update_attendance(member_id, weekday)
-
-
 def ensure_member(member_name):
     global member_count
 
@@ -60,41 +54,12 @@ def parse_line(line: str):
     return name, weekday
 
 
-def show_grade(attendance_file="attendance_weekday_500.txt"):
-    try:
-        with open(attendance_file, 'r', encoding='utf-8') as lines:
-            load_attendance(lines, limit=500)
-
-    except FileNotFoundError:
-        print("파일을 찾을 수 없습니다.")
-        return
-
-    for i in range(1, member_count + 1):
-        if attendance_by_day[i][2] > 9:
-            points[i] += 10
-        if attendance_by_day[i][5] + attendance_by_day[i][6] > 9:
-            points[i] += 10
-
-        if points[i] >= 50:
-            grade[i] = 1
-        elif points[i] >= 30:
-            grade[i] = 2
-        else:
-            grade[i] = 0
-
-        print(f"NAME : {names[i]}, POINT : {points[i]}, GRADE : ", end="")
-        if grade[i] == 1:
-            print("GOLD")
-        elif grade[i] == 2:
-            print("SILVER")
-        else:
-            print("NORMAL")
-
-    print("\nRemoved player")
-    print("==============")
-    for i in range(1, member_count + 1):
-        if grade[i] not in (1, 2) and wednesday_count[i] == 0 and weekend_count[i] == 0:
-            print(names[i])
+def apply_bonuses() -> None:
+    for member_id in range(1, member_count + 1):
+        if attendance_by_day[member_id][2] > 9:  # thursday count
+            points[member_id] += 10
+        if (attendance_by_day[member_id][5] + attendance_by_day[member_id][6]) > 9:  # weekend total
+            points[member_id] += 10
 
 
 def load_attendance(lines, limit=500):
@@ -108,6 +73,42 @@ def load_attendance(lines, limit=500):
         member_id = ensure_member(name)
         update_attendance(member_id, weekday)
 
-# Coverage 100% 위해 주석처리
-# if __name__ == "__main__":
-#     show_grade()
+
+def compute_grade(point):
+    if point >= 50:
+        return 1
+    if point >= 30:
+        return 2
+    return 0
+
+
+def grade_label(g):
+    return {1: "GOLD", 2: "SILVER"}.get(g, "NORMAL")
+
+
+def finalize_grades() -> None:
+    for member_id in range(1, member_count + 1):
+        grade[member_id] = compute_grade(points[member_id])
+
+
+def print_report() -> None:
+    for member_id in range(1, member_count + 1):
+        print(f"NAME : {names[member_id]}, POINT : {points[member_id]}, GRADE : {grade_label(grade[member_id])}")
+    print("\nRemoved player")
+    print("==============")
+    for member_id in range(1, member_count + 1):
+        if grade[member_id] == 0 and wednesday_count[member_id] == 0 and weekend_count[member_id] == 0:
+            print(names[member_id])
+
+
+def show_result(attendance_file="attendance_weekday_500.txt"):
+    try:
+        with open(attendance_file, 'r', encoding='utf-8') as lines:
+            load_attendance(lines, limit=500)
+    except FileNotFoundError:
+        print("파일을 찾을 수 없습니다.")
+        return
+
+    apply_bonuses()
+    finalize_grades()
+    print_report()

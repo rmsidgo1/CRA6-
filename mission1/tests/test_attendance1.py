@@ -8,7 +8,7 @@ import sys
 sys.path.append('C:\\PythonProject')
 print(sys.path)
 
-from mission1.attendance import show_grade
+from mission1.attendance import show_result
 
 
 def act(attendance_file, sut):
@@ -20,7 +20,7 @@ def act(attendance_file, sut):
 
 
 def test_빈파일():
-    sut = show_grade
+    sut = show_result
 
     attendance_file = "EmptyFile.txt"
     with open(attendance_file, "w") as f:
@@ -34,7 +34,7 @@ def test_빈파일():
 
 
 def test_파일이없을때():
-    sut = show_grade
+    sut = show_result
     expected = "파일을 찾을 수 없습니다."
 
     attendance_file = "NotExistsFilename.txt"
@@ -45,7 +45,7 @@ def test_파일이없을때():
 
 
 def test_기대한출력_나오는지():
-    sut = show_grade
+    sut = show_result
     attendance_file = "C:\\PythonProject\\mission1\\tests\\input.txt"
     with open("C:\\PythonProject\\mission1\\tests\\expected.txt", encoding='utf-8') as f:
         expected = f.read()
