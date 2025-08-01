@@ -13,7 +13,7 @@ coverage report
 ---
 
 # 3. Requirements Checklist
-|  요구사항 체크리스트  |  상태  |
+|  요구사항  |  상태  |
 |:------------:|:----:|
 |      D1      |  O   |
 |      D2      |  O   |
